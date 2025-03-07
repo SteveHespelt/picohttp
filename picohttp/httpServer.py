@@ -12,8 +12,8 @@ from typing import Union
 
 
 class HttpServer(object):
-    def __init__(self, port: Union[int,list]=80, handler=staticResource, args=(), threads=True, reuse=True, block=True, start=True,
-                 one_request=False, accept_period: float = 3.0 ):
+    def __init__(self, port: Union[int,list]=80, handler=staticResource, args=(), threads=True, reuse=True, block=True,
+                 start=True, one_request=False, accept_period: float = 3.0, accept_queue_size: int = 5):
         """
 
         :param port: int or list of ints - ports to try to use. First successful bind() is utilized.
@@ -39,6 +39,9 @@ class HttpServer(object):
         self.socket = None
         self.one_request_only = one_request  #  we shutdown after one request is processed.
         self.accept_period = accept_period
+        self.accept_queue_size = accept_queue_size   # in blocking mode, if an incoming connection is used to trigger a
+        # shutdown, we need to ensure that the accept() call is not blocked waiting for that connection. Definitely an
+        # issue when using tightly timed clients in tests.
         self.shutdown = False
         if start:
             self.start()
@@ -65,10 +68,10 @@ class HttpServer(object):
             except OSError:
                 pass
         if self.port:
-            self.socket.listen(1)
+            self.socket.listen(self.accept_queue_size)
             startThread(f"httpserver_{self.port}", self.getRequests)
             # at this point, we now have another thread that is listening for incoming connections with a request
-            # so we might need to block (if not, our caller will nned block using its own strategy)
+            # so we might need to block (if not, our caller will need to block using its own strategy)
             if self.block:
                 self._block()
             return self.port

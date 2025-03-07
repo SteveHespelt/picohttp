@@ -30,7 +30,7 @@ def find_our_thread(our_name_prefix: str, the_port: int = 0) -> Union[str,None]:
 
 
 class ClientThread(threading.Thread):
-    def __init__(self, port: int, test_obj: MyTestCase = None):
+    def __init__(self, port: int, test_obj = None):
         super().__init__(None)
         self.port = port
         self.test_obj: MyTestCase = test_obj
