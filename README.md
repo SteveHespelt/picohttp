@@ -17,7 +17,7 @@ The HttpServer class is used to instantiate an HTTP server object.
 **`class HttpServer(port=80, handler=staticResource, args=(), threads=True, start=True, block=True)`**
 
     port
-        The port to listen on.
+        The port to listen on. An int or list of int values.
 
     handler
         The function defined to be the request handler.
@@ -28,14 +28,23 @@ The HttpServer class is used to instantiate an HTTP server object.
     threads
         If True handle each request in a separate thread, otherwise process them sequentially.
 
+    reuse
+           If True allow the reuse of the server address, otherwise the server will not start if the address is already in use.
+
     start
         If True immediately start the server, otherwise the start() function must be called.
 
     block
         If True the server will block indefinitely when it is started, otherwise the function starting it will return.
 
-    start()
-        Start the server if it was instantiated with start=False.
+    one_request
+        If True, shutdown the server after processing one request.
+
+    accept_period
+        The time in seconds to wait for a connection before checking if the server should be shutdown.
+
+    accept_queue_size
+        The maximum number of connections to queue before refusing new connections.
 
 When a request is received it is parsed by the HTTP server and an HttpRequest object containing the request elements is passed to the request handler.
 
@@ -105,6 +114,8 @@ A helper function that facilitates the serving of static resources my be called 
         The HTTP mime type will be placed into a Content-Type header based on the file extension of the resource.  This is the default that should be used if it can't be determined.
 
 ### Examples
+
+<!-- TODO add more examples showing the use of the most recent ctor flags -->
 This is a minimal HTTP server.  It listens on port 80 and resources contained in the directory where the application is run from.
 ```
 import picohttp

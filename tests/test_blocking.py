@@ -92,10 +92,11 @@ class BlockingTestCase(unittest.TestCase):
 
     def test_blocking_one_client(self):
         """
-        Test the PicoHttpServer with a short period for accepting incoming connections. This is a blocking test.
+        Test the PicoHttpServer with a short period for accepting incoming connections (how long to block before
+        checking if the server shutdown flag.
         NOTE that there is only one client attempt to connect. This is by design for this test as we want to confirm
-        that the one_request==True will cause the server to shut down after the client request is processed.
-
+        that the one_request==True will cause the server to shut down after the client request is processed. That's
+        why the ClientThread instance's shutdown flag == False, not its job to shut down the server (in this test).
         :return:
         """
         run_delay: float = 4.0
@@ -105,7 +106,9 @@ class BlockingTestCase(unittest.TestCase):
         # since we can't start the server until after we construct the client, assume the 1st port is available :-(
         the_client = ClientThread(self.ports_to_try[0], self, server, delay=run_delay, shutdown=False)
         the_client.start()
-        server.start()  # it's blocking so we wait for the client cause the shutdown [as constructed]
+        # it's blocking so we depend on the one_request flag to shut down the server (we need either a request to
+        # occur OR something to set the server's shutdown flag to True). In this test, we have a client making a request
+        server.start()
         end_time = time.time()
         time.sleep(4)  # wait at least the accept_period + 1.0
         self.assertFalse( the_client.is_alive(), 'Client thread is still alive')
