@@ -1,7 +1,9 @@
 [build-system]
 requires = [
     "setuptools>=42",
-    "wheel"
+    "wheel",
+    "packaging>=24.2"  # see https://github.com/pypa/twine/issues/1216 for why (and this is not sufficient to overcome the issue)
+    # see this issue as well:  https://github.com/pypa/setuptools/issues/4759
 ]
 build-backend = "setuptools.build_meta"
 
@@ -24,6 +26,9 @@ classifiers = [
         "Programming Language :: Python :: 3",
         "Operating System :: OS Independent",
 ]
+# license-files key added in Dec 2024, not recognized by twine validation - why the workarounds (so I can publish this)
+# license-files = ["LICENSE"]
+#license.file = 'LICENSE'    #  "GPL-3.0-only"
 
 [project.optional-dependencies]
 # stuff that can be included via pkg-main[option1]
@@ -33,6 +38,10 @@ classifiers = [
 
 [project.urls]
 Repository="https://github.com/jbuehl/picohttp"
+
+[tool.setuptools]
+license-files = []  # see https://github.com/pypa/twine/issues/1216, https://github.com/pypa/setuptools/issues/4759 for why
+                    # upgrading packaging to the latest (24.2) does not fix the issue
 
 [tool.setuptools.packages.find]
 where = ["./"]
