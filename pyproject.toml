@@ -1,0 +1,54 @@
+[build-system]
+requires = [
+    "setuptools>=42",
+    "wheel"
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name="picohttp"
+version="0.5.1"
+requires-python= ">= 3.7"
+authors = [
+      { name= "Joe Deuhl", email="joe@thebuehls.com" },
+      { name= "Steve Hespelt", email= "shespelt@stevens.edu"},
+]
+description = "An HTTP 1.0 server framework that is useful for supporting applications where the behavior is constrained and relatively simple"
+dependencies = [
+   "rutifu"
+]
+readme = "README.md"
+classifiers = [
+        "Development Status :: 3 - Alpha",
+        "Intended Audience :: Developers",
+        "Programming Language :: Python :: 3",
+        "Operating System :: OS Independent",
+]
+
+[project.optional-dependencies]
+# stuff that can be included via pkg-main[option1]
+
+[project.scripts]
+# python script that can get wrapper applied, so script invoked as command
+
+[project.urls]
+Repository="https://github.com/jbuehl/picohttp"
+
+[tool.setuptools.packages.find]
+where = ["./"]
+include = ["picohttp"]
+exclude = ["./tests**"]
+
+
+[tool.poetry]
+
+[tool.mypy]
+mypy_path = 'picohttp/'
+
+[tool.coverage.run]
+source =  [
+  "picohttp/**"
+]
+omit = [
+  "tests/skip*.py"
+]

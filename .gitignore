@@ -1,4 +1,3 @@
 .DS_Store
 dist
 picohttp.egg-info
-pyproject.toml
